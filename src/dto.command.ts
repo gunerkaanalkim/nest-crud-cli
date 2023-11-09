@@ -13,6 +13,6 @@ export const dtoGenerator = async (className: string) => {
 
   const fileName = `${className.toLowerCase()}.dto.ts`;
 
-  writeFileSync(join(__dirname, `../gen/${fileName}`), template, "utf-8");
+  writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
 };
 

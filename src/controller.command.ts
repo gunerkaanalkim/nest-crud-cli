@@ -23,6 +23,6 @@ export const controllerGenerator = async (className: string) => {
 
   const fileName = `${className.toLowerCase()}.controller.ts`;
 
-  writeFileSync(join(__dirname, `../gen/${fileName}`), template, "utf-8");
+  writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
 };
 
