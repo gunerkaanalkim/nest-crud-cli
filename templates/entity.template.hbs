@@ -1,0 +1,5 @@
+import AbstractEntity from 'nest-crud-abstraction/dist/model/AbstractEntity';
+import { Entity } from 'typeorm';
+
+@Entity({ name: '{{entityName}}' })
+export default class {{className}} extends AbstractEntity {}

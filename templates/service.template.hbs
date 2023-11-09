@@ -1,0 +1,27 @@
+import { Injectable } from '@nestjs/common';
+import {{entityName}} from '{{entityFileName}}';
+import {{dtoName}} from '{{dtoFileName}}';
+import AbstractCrudService from 'nest-crud-abstraction/dist/service/AbstractCrudService';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import {{mapperName}} from '{{mapperFileName}}';
+import AbstractMapper from 'nest-crud-abstraction/dist/mapper/AbstractMapper';
+
+@Injectable()
+export class {{serviceName}} extends AbstractCrudService<{{entityName}}, {{dtoName}}> {
+  constructor(
+    @InjectRepository({{entityName}})
+    private {{repositoryName}}: Repository<{{entityName}}>,
+    private readonly {{mapperVariableName}}: {{mapperName}},
+  ) {
+    super();
+  }
+
+  protected getRepository(): Repository<{{entityName}}> {
+    return this.{{repositoryName}};
+  }
+
+  protected getMapper(): AbstractMapper<{{entityName}}, {{dtoName}}> {
+    return this.{{mapperVariableName}};
+  }
+}

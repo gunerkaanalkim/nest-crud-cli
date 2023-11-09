@@ -1,0 +1,14 @@
+import { Module } from '@nestjs/common';
+import { {{controllerName}} } from '{{controllerFileName}}';
+import { {{serviceName}} } from '{{serviceFileName}}';
+import {{mapperName}} from '{{mapperFileName}}';
+import {{entityName}} from '{{entityFileName}}';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([{{entityName}}])],
+  controllers: [{{controllerName}}],
+  providers: [{{serviceName}}, {{mapperName}}],
+  exports: [TypeOrmModule],
+})
+export class {{moduleName}} {}

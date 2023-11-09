@@ -1,0 +1,17 @@
+import { Controller } from '@nestjs/common';
+import { {{serviceName}} } from '{{serviceFileName}}';
+import {{entityName}} from '{{entityFileName}}';
+import {{dtoName}} from '{{dtoFileName}}';
+import AbstractController from 'nest-crud-abstraction/dist/controller/AbstractController';
+import AbstractCrudService from 'nest-crud-abstraction/dist/service/AbstractCrudService';
+
+@Controller('/{{controllerPathName}}')
+export class {{entityName}}Controller extends AbstractController<{{entityName}}, {{dtoName}}> {
+  constructor(private readonly {{serviceVariableName}}: {{serviceName}}) {
+    super();
+  }
+
+  protected getService(): AbstractCrudService<{{entityName}}, {{dtoName}}> {
+    return this.{{serviceVariableName}};
+  }
+}

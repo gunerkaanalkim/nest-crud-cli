@@ -1,0 +1,19 @@
+import {{entityName}} from '{{entityFileName}}';
+import {{dtoName}} from '{{dtoFileName}}';
+import { Injectable } from '@nestjs/common';
+import AbstractMapper from 'nest-crud-abstraction/dist/mapper/AbstractMapper';
+
+@Injectable()
+export default class {{mapperName}} extends AbstractMapper<{{entityName}}, {{dtoName}}> {
+  toDTO(entity: {{entityName}}): {{dtoName}} {
+    const dto = new {{dtoName}}();
+
+    return dto;
+  }
+
+  toEntity(dto: {{dtoName}}): {{entityName}} {
+    const entity = new {{entityName}}();
+
+    return entity;
+  }
+}
