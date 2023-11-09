@@ -21,6 +21,6 @@ export const moduleGenerator = async (className: string) => {
 
   const fileName = `${className.toLowerCase()}.module.ts`;
 
-  writeFileSync(join(__dirname, `../gen/${fileName}`), template, "utf-8");
+  writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
 };
 

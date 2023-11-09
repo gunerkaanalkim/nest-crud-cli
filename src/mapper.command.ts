@@ -17,6 +17,6 @@ export const mapperGenerator = async (className: string) => {
 
   const fileName = `${className.toLowerCase()}.mapper.ts`;
 
-  writeFileSync(join(__dirname, `../gen/${fileName}`), template, "utf-8");
+  writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
 };
 
