@@ -105,9 +105,6 @@ async function commandRunner() {
             },
             templatePath: "../../templates/mapper.template.hbs",
         }).execute();
-    } else if ('help' === answer) {
-        console.log('help')
-
     } else {
         console.log(chalk.yellow(`nccli version is ${process.env.npm_package_version}`));
     }
