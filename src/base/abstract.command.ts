@@ -11,6 +11,8 @@ export interface BuildOptions {
 hbs.registerHelper("isNumber", (param) => {
     if (typeof param === "number") {
         return Number(param)
+    } else if (typeof param === "boolean") {
+        return Boolean(param)
     } else {
         return `"${param}"`
     }
