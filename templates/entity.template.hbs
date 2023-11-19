@@ -1,5 +1,11 @@
 import AbstractEntity from 'nest-crud-abstraction/dist/model/AbstractEntity';
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity({ name: '{{entityName}}' })
-export default class {{className}} extends AbstractEntity {}
+export default class {{className}} extends AbstractEntity {
+{{#each columns}}
+    @Column({ {{#each this.props}} {{@key}} : {{#isNumber this}} {{/isNumber}}, {{/each}} })
+    {{this.name}}: {{this.type}};
+
+{{/each}}
+}

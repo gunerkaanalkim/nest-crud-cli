@@ -1,6 +1,6 @@
 {
   "name": "nest-crud-cli",
-  "version": "0.0.5",
+  "version": "0.0.13",
   "description": "",
   "main": "./lib/index.js",
   "bin": {
@@ -13,9 +13,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@inquirer/prompts": "^3.3.0",
     "@types/handlebars-helpers": "^0.5.6",
     "chalk": "^4.1.2",
+    "commander": "^11.1.0",
     "handlebars": "^4.7.8"
   },
   "devDependencies": {

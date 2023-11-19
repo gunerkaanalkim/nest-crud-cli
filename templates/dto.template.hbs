@@ -1,3 +1,7 @@
 import AbstractDTO from 'nest-crud-abstraction/dist/payload/AbstractDTO';
 
-export default class {{classname}}DTO extends AbstractDTO {}
+export default class {{classname}}DTO extends AbstractDTO {
+{{#each columns}}
+    {{this.name}}: {{this.type}};
+{{/each}}
+}

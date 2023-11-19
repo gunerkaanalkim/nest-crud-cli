@@ -2,10 +2,25 @@ import {readFileSync, writeFileSync} from "fs";
 import {join} from "path";
 import hbs from "handlebars";
 import chalk from 'chalk';
+
 export interface BuildOptions {
     data: any;
     templatePath: string;
 }
+
+hbs.registerHelper("isNumber", (param) => {
+    if (typeof param === "number") {
+        return Number(param)
+    } else if (typeof param === "boolean") {
+        return Boolean(param)
+    } else {
+        return `"${param}"`
+    }
+});
+
+hbs.registerHelper("removeNonColumnAttribute", (param) => {
+    console.log(param)
+});
 
 export default abstract class AbstractCommand {
     buildOptions: BuildOptions = {} as BuildOptions;
