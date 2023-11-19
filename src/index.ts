@@ -7,27 +7,47 @@ import ModuleCommand from "./commands/module.command";
 import MapperCommand from "./commands/mapper.command";
 import chalk from "chalk";
 import {program} from 'commander';
+import fs from 'fs';
 
 
 async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.7');
+        .version('0.0.8');
 
     program
-        .option('-n, --name', 'entity name', 'SampleCLIEntity');
+        .option('-n, --name', 'entity name', 'SampleCLIEntity')
+        .option('-p, --props', 'entity properties');
 
     program.parse();
 
+    console.log()
+
     const className = program.args[0];
+    const columns= program.args[1];
+
+    fs.writeFile(`${className.toLowerCase()}.schema.json`,columns, function(err){
+        if(err) {
+            console.log(chalk.red(`Error : ${err}`));
+        }
+
+        console.log(chalk.green(
+            'Creating file ' +
+            chalk.blue.underline.bold(`${className.toLowerCase()}.schema.json`) +
+            ' has been successful!'
+        ));
+    });
 
     console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
 
     new EntityCommand().builder({
         data: {
             className: className,
-            entityName: `${className.toLowerCase()}s`
+            entityName: `${className.toLowerCase()}s`,
+            props : {
+
+            }
         },
         templatePath: "../../templates/entity.template.hbs",
     }).execute();
