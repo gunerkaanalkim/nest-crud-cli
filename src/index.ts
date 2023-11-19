@@ -18,7 +18,7 @@ async function commandRunner() {
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
-        .option('-p, --props', 'entity properties');
+        .option('-c, --columns', 'entity columns');
 
     program.parse();
 
@@ -45,9 +45,7 @@ async function commandRunner() {
         data: {
             className: className,
             entityName: `${className.toLowerCase()}s`,
-            props : {
-
-            }
+            columns : JSON.parse(columns)
         },
         templatePath: "../../templates/entity.template.hbs",
     }).execute();
