@@ -18,6 +18,10 @@ hbs.registerHelper("isNumber", (param) => {
     }
 });
 
+hbs.registerHelper("removeNonColumnAttribute", (param) => {
+    console.log(param)
+});
+
 export default abstract class AbstractCommand {
     buildOptions: BuildOptions = {} as BuildOptions;
 
