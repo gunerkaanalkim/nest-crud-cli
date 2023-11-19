@@ -14,7 +14,7 @@ async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.10');
+        .version('0.0.11');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')

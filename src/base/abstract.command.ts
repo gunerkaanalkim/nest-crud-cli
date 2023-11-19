@@ -2,10 +2,19 @@ import {readFileSync, writeFileSync} from "fs";
 import {join} from "path";
 import hbs from "handlebars";
 import chalk from 'chalk';
+
 export interface BuildOptions {
     data: any;
     templatePath: string;
 }
+
+hbs.registerHelper("isNumber", (param) => {
+    if (typeof param === "number") {
+        return Number(param)
+    } else {
+        return `"${param}"`
+    }
+});
 
 export default abstract class AbstractCommand {
     buildOptions: BuildOptions = {} as BuildOptions;
