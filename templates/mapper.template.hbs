@@ -7,12 +7,18 @@ import AbstractMapper from 'nest-crud-abstraction/dist/mapper/AbstractMapper';
 export default class {{mapperName}} extends AbstractMapper<{{entityName}}, {{dtoName}}> {
   toDTO(entity: {{entityName}}): {{dtoName}} {
     const dto = new {{dtoName}}();
+    {{#each columns}}
+    dto.{{this.name}} = entity.{{this.name}};
+    {{/each}}
 
     return dto;
   }
 
   toEntity(dto: {{dtoName}}): {{entityName}} {
     const entity = new {{entityName}}();
+    {{#each columns}}
+    entity.{{this.name}} = dto.{{this.name}};
+    {{/each}}
 
     return entity;
   }

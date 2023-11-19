@@ -70,7 +70,8 @@ async function commandRunner() {
 
     new DtoCommand().builder({
         data: {
-            className: className
+            className: className,
+            columns : JSON.parse(columns)
         },
         templatePath: "../../templates/dto.template.hbs",
     }).execute();
@@ -114,7 +115,8 @@ async function commandRunner() {
             entityFileName: `./${className.toLowerCase()}.entity`,
             dtoName: `${className}DTO`,
             dtoFileName: `./${className.toLowerCase()}.dto`,
-            mapperName: `${className}Mapper`
+            mapperName: `${className}Mapper`,
+            columns : JSON.parse(columns)
         },
         templatePath: "../../templates/mapper.template.hbs",
     }).execute();
