@@ -111,7 +111,7 @@ const getAllFiles = function (dirPath: any, arrayOfModules?: any) {
         if (fs.statSync(dirPath + "/" + file).isDirectory()) {
             arrayOfModules = getAllFiles(dirPath + "/" + file, arrayOfModules)
         } else {
-            if (file.includes('.module.')) {
+            if (file.includes('.module.') && !file.includes('app.module.') && !file.includes('content-type.')) {
                 const rawModuleName = file.split('.')[0];
                 const preparedModuleName = `${rawModuleName.charAt(0).toUpperCase() + rawModuleName.slice(1)}Module`
 
@@ -128,8 +128,6 @@ const getAllFiles = function (dirPath: any, arrayOfModules?: any) {
 }
 
 function updateDefinitions() {
-    console.log("DIR - -- ----", join(process.cwd()));
-
     const moduleDefinitions = getAllFiles(join(process.cwd()));
 
     new DefinitionCommand().builder({
@@ -146,7 +144,7 @@ async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.21');
+        .version('0.0.22');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
@@ -183,4 +181,4 @@ async function commandRunner() {
 
 commandRunner();
 
-updateDefinitions();
+setTimeout(()=>{updateDefinitions()}, 2000)
