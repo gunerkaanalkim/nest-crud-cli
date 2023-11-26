@@ -144,16 +144,23 @@ async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.22');
+        .version('0.0.23');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
-        .option('-c, --columns', 'entity columns');
+        .option('-c, --columns', 'entity columns')
+        .option('-s, --sync', 'sync modules');
 
-    program.parse();
+    program.parse(process.argv);
+    const options = program.opts();
 
     className = program.args[0];
     const columns= program.args[1];
+
+    if (options.sync) {
+        updateDefinitions();
+        return;
+    }
 
     fs.mkdir(path.join(process.cwd(), `${className.toLowerCase()}`), (err) => {
         if (err) {
@@ -177,8 +184,7 @@ async function commandRunner() {
 
     console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
 
+    setTimeout(()=>{updateDefinitions()}, 2000)
 }
 
 commandRunner();
-
-setTimeout(()=>{updateDefinitions()}, 2000)
