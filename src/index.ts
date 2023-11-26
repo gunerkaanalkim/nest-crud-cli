@@ -8,21 +8,20 @@ import MapperCommand from "./commands/mapper.command";
 import chalk from "chalk";
 import {program} from 'commander';
 import fs from 'fs';
-
+import {join} from "path";
+import DefinitionCommand from "./commands/definition.command";
 
 async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.13');
+        .version('0.0.14');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
         .option('-c, --columns', 'entity columns');
 
     program.parse();
-
-    console.log()
 
     const className = program.args[0];
     const columns= program.args[1];
@@ -48,6 +47,7 @@ async function commandRunner() {
             columns : JSON.parse(columns)
         },
         templatePath: "../../templates/entity.template.hbs",
+        outDir: "./"
     }).execute();
 
     new ControllerCommand().builder({
@@ -66,6 +66,7 @@ async function commandRunner() {
             controllerPathName: `${className.toLowerCase()}s`
         },
         templatePath: "../../templates/controller.template.hbs",
+        outDir: "./"
     }).execute();
 
     new DtoCommand().builder({
@@ -74,6 +75,7 @@ async function commandRunner() {
             columns : JSON.parse(columns)
         },
         templatePath: "../../templates/dto.template.hbs",
+        outDir: "./"
     }).execute();
 
     new ServiceCommand().builder({
@@ -90,6 +92,7 @@ async function commandRunner() {
             repositoryName: `${className.toLowerCase()}Repository`
         },
         templatePath: "../../templates/service.template.hbs",
+        outDir: "./"
     }).execute();
 
     new ModuleCommand().builder({
@@ -106,6 +109,7 @@ async function commandRunner() {
             moduleName: `${className.charAt(0).toUpperCase() + className.slice(1)}Module`,
         },
         templatePath: "../../templates/module.template.hbs",
+        outDir: "./"
     }).execute();
 
     new MapperCommand().builder({
@@ -119,7 +123,49 @@ async function commandRunner() {
             columns : JSON.parse(columns)
         },
         templatePath: "../../templates/mapper.template.hbs",
+        outDir: "./"
     }).execute();
+
 }
 
 commandRunner();
+
+const getAllFiles = function (dirPath: any, arrayOfModules?: any) {
+    let files = fs.readdirSync(dirPath)
+
+    arrayOfModules = arrayOfModules || []
+
+    files.forEach(function (file) {
+        if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+            arrayOfModules = getAllFiles(dirPath + "/" + file, arrayOfModules)
+        } else {
+            if (file.includes('.module.')) {
+                const rawModuleName = file.split('.')[0];
+                const preparedModuleName = `${rawModuleName.charAt(0).toUpperCase() + rawModuleName.slice(1)}Module`
+
+                arrayOfModules.push({
+                    rawModuleName: rawModuleName,
+                    preparedModuleName: preparedModuleName,
+                    path: `./${rawModuleName}/${rawModuleName}.module`
+                })
+            }
+        }
+    })
+
+    return arrayOfModules
+}
+
+function updateDefinitions() {
+    const moduleDefinitions = getAllFiles(join(process.cwd(), './'));
+
+    new DefinitionCommand().builder({
+        data: {
+            className: 'module',
+            modules: moduleDefinitions
+        },
+        templatePath: "../../templates/definition.template.hbs",
+        outDir: "../"
+    }).execute();
+}
+
+updateDefinitions();

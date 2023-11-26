@@ -6,6 +6,7 @@ import chalk from 'chalk';
 export interface BuildOptions {
     data: any;
     templatePath: string;
+    outDir: string;
 }
 
 hbs.registerHelper("isNumber", (param) => {
@@ -41,7 +42,12 @@ export default abstract class AbstractCommand {
 
         //compile template
         const compiledTemplate = this.compileTemplate(fileContents, this.buildOptions?.data);
-        this.writeFileSync(fileName, compiledTemplate)
+
+        if (this.buildOptions.outDir!) {
+            this.writeFileSync(`${this.buildOptions.outDir}/${fileName}`, compiledTemplate)
+        } else {
+            this.writeFileSync(fileName, compiledTemplate)
+        }
     }
 
     protected compileTemplate(fileContent: string, data: any): string {
@@ -55,6 +61,7 @@ export default abstract class AbstractCommand {
     builder(buildOption: BuildOptions) {
         this.buildOptions!.data = buildOption.data;
         this.buildOptions!.templatePath = buildOption.templatePath
+        this.buildOptions!.outDir = buildOption.outDir
 
         return this;
     }
