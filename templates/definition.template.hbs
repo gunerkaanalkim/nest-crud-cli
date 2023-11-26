@@ -1,5 +1,5 @@
 {{#each modules}}
-import {{this.preparedModuleName}} from "{{this.path}}";
+import { {{this.preparedModuleName}} } from "{{this.path}}";
 {{/each}}
 
 export const imports = [{{#each modules}} {{this.preparedModuleName}}, {{/each}}]
