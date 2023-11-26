@@ -84,7 +84,9 @@ function commands(columns: string) {
         },
         templatePath: "../../templates/module.template.hbs",
         outDir: `${className.toLowerCase()}`
-    }).execute();
+    }).execute((err: any) => {
+        updateDefinitions();
+    });
 
     new MapperCommand().builder({
         data: {
@@ -144,7 +146,7 @@ async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.23');
+        .version('0.0.27');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
@@ -183,8 +185,6 @@ async function commandRunner() {
     });
 
     console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
-
-    setTimeout(()=>{updateDefinitions()}, 2000)
 }
 
 commandRunner();

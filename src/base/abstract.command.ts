@@ -1,4 +1,4 @@
-import {readFileSync, writeFileSync} from "fs";
+import {readFileSync, writeFile, writeFileSync} from "fs";
 import {join} from "path";
 import hbs from "handlebars";
 import chalk from 'chalk';
@@ -28,7 +28,7 @@ export default abstract class AbstractCommand {
 
     abstract getFileExtension(): string;
 
-    execute(): void {
+    execute(successHandler?: Function): void {
         // read template
         const fileContents = readFileSync(join(__dirname, this.buildOptions!.templatePath), "utf-8").toString();
 
@@ -44,9 +44,9 @@ export default abstract class AbstractCommand {
         const compiledTemplate = this.compileTemplate(fileContents, this.buildOptions?.data);
 
         if (this.buildOptions.outDir!) {
-            this.writeFileSync(`${this.buildOptions.outDir}/${fileName}`, compiledTemplate)
+            this.writeFile(`${this.buildOptions.outDir}/${fileName}`, compiledTemplate, successHandler)
         } else {
-            this.writeFileSync(fileName, compiledTemplate)
+            this.writeFile(fileName, compiledTemplate, successHandler)
         }
     }
 
@@ -54,8 +54,10 @@ export default abstract class AbstractCommand {
         return hbs.compile(fileContent)(data);
     }
 
-    protected writeFileSync(fileName: string, template: string) {
-        writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
+    protected writeFile(fileName: string, template: string, successHandler?: Function) {
+        writeFile(join(process.cwd(), `${fileName}`), template, (err)=> {
+            successHandler?.call(err);
+        });
     }
 
     builder(buildOption: BuildOptions) {
