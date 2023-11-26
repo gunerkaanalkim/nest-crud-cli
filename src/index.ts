@@ -13,51 +13,15 @@ import DefinitionCommand from "./commands/definition.command";
 
 let className = "";
 
-async function commandRunner() {
-    program
-        .name('nest-crud-cli')
-        .description('nest-crud-cli')
-        .version('0.0.15');
-
-    program
-        .option('-n, --name', 'entity name', 'SampleCLIEntity')
-        .option('-c, --columns', 'entity columns');
-
-    program.parse();
-
-    className = program.args[0];
-
-    fs.mkdir(path.join(__dirname, `${className.toLowerCase()}`), (err) => {
-        if (err) {
-            return console.error(err);
-        }
-        console.log('Directory created successfully!');
-    });
-
-    const columns= program.args[1];
-
-    fs.writeFile(`${className.toLowerCase()}.schema.json`,columns, function(err){
-        if(err) {
-            console.log(chalk.red(`Error : ${err}`));
-        }
-
-        console.log(chalk.green(
-            'Creating file ' +
-            chalk.blue.underline.bold(`${className.toLowerCase()}.schema.json`) +
-            ' has been successful!'
-        ));
-    });
-
-    console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
-
+function commands(columns: string) {
     new EntityCommand().builder({
         data: {
             className: className,
             entityName: `${className.toLowerCase()}s`,
-            columns : JSON.parse(columns)
+            columns: JSON.parse(columns)
         },
         templatePath: "../../templates/entity.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
 
     new ControllerCommand().builder({
@@ -76,16 +40,16 @@ async function commandRunner() {
             controllerPathName: `${className.toLowerCase()}s`
         },
         templatePath: "../../templates/controller.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
 
     new DtoCommand().builder({
         data: {
             className: className,
-            columns : JSON.parse(columns)
+            columns: JSON.parse(columns)
         },
         templatePath: "../../templates/dto.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
 
     new ServiceCommand().builder({
@@ -102,7 +66,7 @@ async function commandRunner() {
             repositoryName: `${className.toLowerCase()}Repository`
         },
         templatePath: "../../templates/service.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
 
     new ModuleCommand().builder({
@@ -119,7 +83,7 @@ async function commandRunner() {
             moduleName: `${className.charAt(0).toUpperCase() + className.slice(1)}Module`,
         },
         templatePath: "../../templates/module.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
 
     new MapperCommand().builder({
@@ -130,11 +94,48 @@ async function commandRunner() {
             dtoName: `${className}DTO`,
             dtoFileName: `./${className.toLowerCase()}.dto`,
             mapperName: `${className}Mapper`,
-            columns : JSON.parse(columns)
+            columns: JSON.parse(columns)
         },
         templatePath: "../../templates/mapper.template.hbs",
-        outDir: `./${className.toLowerCase()}`
+        outDir: `${className.toLowerCase()}`
     }).execute();
+}
+
+async function commandRunner() {
+    program
+        .name('nest-crud-cli')
+        .description('nest-crud-cli')
+        .version('0.0.16');
+
+    program
+        .option('-n, --name', 'entity name', 'SampleCLIEntity')
+        .option('-c, --columns', 'entity columns');
+
+    program.parse();
+
+    className = program.args[0];
+    const columns= program.args[1];
+
+    fs.mkdir(path.join(__dirname, `${className.toLowerCase()}`), (err) => {
+        if (err) {
+            return console.error(err);
+        }
+        commands(columns);
+
+        fs.writeFile(`./${className}/${className.toLowerCase()}.schema.json`,columns, function(err){
+            if(err) {
+                console.log(chalk.red(`Error : ${err}`));
+            }
+
+            console.log(chalk.green(
+                'Creating file ' +
+                chalk.blue.underline.bold(`${className.toLowerCase()}.schema.json`) +
+                ' has been successful!'
+            ));
+        });
+    });
+
+    console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
 
 }
 
