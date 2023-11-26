@@ -101,45 +101,6 @@ function commands(columns: string) {
     }).execute();
 }
 
-async function commandRunner() {
-    program
-        .name('nest-crud-cli')
-        .description('nest-crud-cli')
-        .version('0.0.16');
-
-    program
-        .option('-n, --name', 'entity name', 'SampleCLIEntity')
-        .option('-c, --columns', 'entity columns');
-
-    program.parse();
-
-    className = program.args[0];
-    const columns= program.args[1];
-
-    fs.mkdir(path.join(__dirname, `${className.toLowerCase()}`), (err) => {
-        if (err) {
-            return console.error(err);
-        }
-        commands(columns);
-
-        fs.writeFile(`./${className}/${className.toLowerCase()}.schema.json`,columns, function(err){
-            if(err) {
-                console.log(chalk.red(`Error : ${err}`));
-            }
-
-            console.log(chalk.green(
-                'Creating file ' +
-                chalk.blue.underline.bold(`${className.toLowerCase()}.schema.json`) +
-                ' has been successful!'
-            ));
-        });
-    });
-
-    console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
-
-}
-
-commandRunner();
 
 const getAllFiles = function (dirPath: any, arrayOfModules?: any) {
     let files = fs.readdirSync(dirPath)
@@ -167,7 +128,9 @@ const getAllFiles = function (dirPath: any, arrayOfModules?: any) {
 }
 
 function updateDefinitions() {
-    const moduleDefinitions = getAllFiles(join(process.cwd(), './'));
+    console.log("DIR - -- ----", join(process.cwd()));
+
+    const moduleDefinitions = getAllFiles(join(process.cwd()));
 
     new DefinitionCommand().builder({
         data: {
@@ -175,8 +138,49 @@ function updateDefinitions() {
             modules: moduleDefinitions
         },
         templatePath: "../../templates/definition.template.hbs",
-        outDir: "../"
+        outDir: "./"
     }).execute();
 }
+
+async function commandRunner() {
+    program
+        .name('nest-crud-cli')
+        .description('nest-crud-cli')
+        .version('0.0.21');
+
+    program
+        .option('-n, --name', 'entity name', 'SampleCLIEntity')
+        .option('-c, --columns', 'entity columns');
+
+    program.parse();
+
+    className = program.args[0];
+    const columns= program.args[1];
+
+    fs.mkdir(path.join(process.cwd(), `${className.toLowerCase()}`), (err) => {
+        if (err) {
+            return console.error('-----Module Folder Creation Error-----', err);
+        }
+
+        commands(columns);
+
+        fs.writeFile(path.join(process.cwd(), `${className.toLowerCase()}/${className.toLowerCase()}.schema.json`), columns, function(err){
+            if(err) {
+                console.log(chalk.red(`-----Schema Creation Error----- : ${err}`));
+            }
+
+            console.log(chalk.green(
+                'Creating file ' +
+                chalk.blue.underline.bold(`${className.toLowerCase()}.schema.json`) +
+                ' has been successful!'
+            ));
+        });
+    });
+
+    console.log(chalk.yellow(`Working directory is ${process.cwd()}`));
+
+}
+
+commandRunner();
 
 updateDefinitions();
