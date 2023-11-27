@@ -1,4 +1,4 @@
-import {readFileSync, writeFileSync} from "fs";
+import {readFileSync, writeFile, writeFileSync} from "fs";
 import {join} from "path";
 import hbs from "handlebars";
 import chalk from 'chalk';
@@ -6,6 +6,7 @@ import chalk from 'chalk';
 export interface BuildOptions {
     data: any;
     templatePath: string;
+    outDir: string;
 }
 
 hbs.registerHelper("isNumber", (param) => {
@@ -27,7 +28,7 @@ export default abstract class AbstractCommand {
 
     abstract getFileExtension(): string;
 
-    execute(): void {
+    execute(successHandler?: Function): void {
         // read template
         const fileContents = readFileSync(join(__dirname, this.buildOptions!.templatePath), "utf-8").toString();
 
@@ -41,20 +42,28 @@ export default abstract class AbstractCommand {
 
         //compile template
         const compiledTemplate = this.compileTemplate(fileContents, this.buildOptions?.data);
-        this.writeFileSync(fileName, compiledTemplate)
+
+        if (this.buildOptions.outDir!) {
+            this.writeFile(`${this.buildOptions.outDir}/${fileName}`, compiledTemplate, successHandler)
+        } else {
+            this.writeFile(fileName, compiledTemplate, successHandler)
+        }
     }
 
     protected compileTemplate(fileContent: string, data: any): string {
         return hbs.compile(fileContent)(data);
     }
 
-    protected writeFileSync(fileName: string, template: string) {
-        writeFileSync(join(process.cwd(), `${fileName}`), template, "utf-8");
+    protected writeFile(fileName: string, template: string, successHandler?: Function) {
+        writeFile(join(process.cwd(), `${fileName}`), template, (err)=> {
+            successHandler?.call(err);
+        });
     }
 
     builder(buildOption: BuildOptions) {
         this.buildOptions!.data = buildOption.data;
         this.buildOptions!.templatePath = buildOption.templatePath
+        this.buildOptions!.outDir = buildOption.outDir
 
         return this;
     }
