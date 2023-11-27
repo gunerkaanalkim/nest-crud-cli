@@ -146,7 +146,7 @@ async function commandRunner() {
     program
         .name('nest-crud-cli')
         .description('nest-crud-cli')
-        .version('0.0.27');
+        .version('0.0.28');
 
     program
         .option('-n, --name', 'entity name', 'SampleCLIEntity')
@@ -164,9 +164,15 @@ async function commandRunner() {
         return;
     }
 
-    fs.mkdir(path.join(process.cwd(), `${className.toLowerCase()}`), (err) => {
+    const folderPath = path.join(process.cwd(), `${className.toLowerCase()}`);
+
+    if (fs.existsSync(folderPath)) {
+        fs.rmdirSync(folderPath, {recursive: true});
+    }
+
+    fs.mkdir(folderPath, (err) => {
         if (err) {
-            return console.error('-----Module Folder Creation Error-----', err);
+            return console.log(chalk.red(`-----Module Folder Creation Error----- : ${err}`));
         }
 
         commands(columns);
